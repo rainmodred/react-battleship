@@ -25,7 +25,9 @@ module.exports = {
   ],
   rules: {
     "react/jsx-filename-extension": 0,
+    "react/no-array-index-key": 0,
     "no-plusplus": 0,
+    "no-void": 0,
     "prettier/prettier": [
       "error",
       {

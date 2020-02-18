@@ -9,16 +9,16 @@ export default function Player() {
     const ships = gameboard.getShips();
     return ships.every(ship => ship.isSunk());
   };
-  const getGameboard = () =>
+  const getFiringboard = () =>
     // return gameboard without ships
-    gameboard.board.map(row => row.map(cell => (cell === 'S' ? '' : cell)));
+    gameboard.getBoard().map(row => row.map(cell => (cell === 'S' ? '' : cell)));
   const attack = (enemy, row, col) => {
     const attackResult = enemy.gameboard.receiveAttack(row, col);
     turn = attackResult !== 'miss';
   };
   return {
     getTurn,
-    getGameboard,
+    getFiringboard,
     gameboard,
     hasLost,
     attack,

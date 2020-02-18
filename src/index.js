@@ -1,19 +1,41 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createGlobalStyle } from 'styled-components';
 import App from './App';
 
-import Gameboard from './game/Gameboard';
-import Ship from './game/Ship';
+const GlobalStyle = createGlobalStyle`
+  html {
+    box-sizing: border-box;
+    font-size: 16px;
+    user-select: none;
+    font-family: 'Open Sans', sans-serif;
+  }
 
-const gameboard = Gameboard();
-const ship = Ship(0, 0, 3);
-const ship1 = Ship(5, 5, 1);
+  *, *:before, *:after {
+    box-sizing: inherit;
+  }
 
-gameboard.placeShip(ship);
-gameboard.placeShip(ship1);
-// gameboard.placeShip(ship1);
-gameboard.placeShip(ship, 5, 5);
-console.log(gameboard.getBoard());
-console.log(gameboard.getShips());
+  body, h1, h2, h3, h4, h5, h6, p, ol, ul {
+    margin: 0;
+    padding: 0;
+    font-weight: normal;
+  }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+  ol, ul {
+    list-style: none;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+`;
+
+const app = (
+  <>
+    <GlobalStyle />
+    <App />
+  </>
+);
+
+ReactDOM.render(app, document.getElementById('root'));

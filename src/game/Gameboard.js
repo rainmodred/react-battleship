@@ -133,7 +133,7 @@ export default function Gameboard() {
           getRandomInt(0, SIZE),
           getRandomInt(0, SIZE),
           length,
-          Math.random() > 0.5 ? 'HORIZONTAL' : 'VERTICAL'
+          Math.random() > 0.5
         );
 
         if (placeShip(newShip)) {

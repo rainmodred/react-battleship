@@ -1,11 +1,13 @@
 import Gameboard from './Gameboard';
 import getRandomInt from '../utils';
+import Player from './Player';
 
 export default function ComputerPlayer() {
   const gameboard = Gameboard();
   let hitsHistory = [];
   let turn = false;
 
+  const { getFiringboard } = Player();
   const randomAttack = board => {
     const emptyCellCooords = [];
     const BOARD_SIZE = gameboard.length;
@@ -97,5 +99,6 @@ export default function ComputerPlayer() {
   return {
     gameboard,
     attack,
+    getFiringboard,
   };
 }
