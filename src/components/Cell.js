@@ -8,6 +8,7 @@ const StyledCell = styled.div`
 
   &:hover {
     border: ${props => (props.hover ? '2px solid red' : 'none')};
+    cursor: ${props => props.hover && 'crosshair'};
   }
 `;
 
