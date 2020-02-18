@@ -15,7 +15,7 @@ function createBoard() {
 }
 
 export default function Gameboard() {
-  const board = createBoard();
+  let board = createBoard();
   let ships = [];
 
   const getBoard = () => board;
@@ -150,6 +150,12 @@ export default function Gameboard() {
     }
   };
 
+  const randomizeShips = () => {
+    board = createBoard();
+    ships = [];
+    placeShips();
+  };
+
   const receiveAttack = (row, col) => {
     if (board[row][col] !== 'S') {
       board[row][col] = 'M';
@@ -175,5 +181,6 @@ export default function Gameboard() {
     moveShip,
     placeShips,
     receiveAttack,
+    randomizeShips,
   };
 }
