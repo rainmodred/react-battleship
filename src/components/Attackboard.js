@@ -10,7 +10,7 @@ const StyledBoard = styled.div`
   position: relative;
 `;
 
-export default function FiringBoard({ board, onCellClick }) {
+export default function Attackboard({ board, onCellClick }) {
   const renderCells = () =>
     board.map((row, rowIndex) =>
       row.map((cell, colIndex) => (
@@ -25,7 +25,7 @@ export default function FiringBoard({ board, onCellClick }) {
   return <StyledBoard>{renderCells()}</StyledBoard>;
 }
 
-FiringBoard.propTypes = {
+Attackboard.propTypes = {
   board: PropTypes.arrayOf(PropTypes.array).isRequired,
   onCellClick: PropTypes.func.isRequired,
 };

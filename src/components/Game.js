@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+
+import uuidv4 from 'uuid/v4';
 import Player from '../game/Player';
 import ComputerPlayer from '../game/ComputerPlayer';
 import Board from './Board';
-import GameBoard from './Gameboard';
-import FiringBoard from './FiringBoard';
+import Gameboard from './Gameboard';
+import Attackboard from './Attackboard';
 import GameState from './GameState';
 
 const StyledGame = styled.div`
@@ -21,29 +23,86 @@ const StyledHeader = styled.header`
   align-items: center;
 `;
 
-const player = Player();
-player.gameboard.placeShips();
-const computerPlayer = ComputerPlayer();
-computerPlayer.gameboard.placeShips();
+let player = Player();
+let computerPlayer = ComputerPlayer();
 
 export default function Game() {
-  const [gameboard, setGameboard] = useState(player.gameboard.getBoard());
-  const [firingboard, setFiringboard] = useState(computerPlayer.getFiringboard());
-  const [ships, setShips] = useState(player.gameboard.getShips());
-
+  const [gameboard, setGameboard] = useState([]);
+  const [attackboard, setAttackboard] = useState([]);
+  const [ships, setShips] = useState([]);
   const [started, setStarted] = useState(false);
   const [winner, setWinner] = useState('');
+  const [whoseTurn, setWhoseTurn] = useState('Your turn');
 
-  const handleCellClick = (row, col) => {
-    console.log(row, col);
+  const init = () => {
+    player = Player();
+    player.placeShips();
+    computerPlayer = ComputerPlayer();
+    computerPlayer.placeShips();
+
+    setGameboard(player.getGameboard());
+    setAttackboard(computerPlayer.getAttackboard());
+    setShips(
+      player.getShips().map(ship => ({
+        ...ship,
+        id: uuidv4(),
+      }))
+    );
+    setWhoseTurn('Your turn');
+    setStarted(false);
+    setWinner('');
+  };
+  useEffect(() => init(), []);
+
+  const computerTurn = () => {
+    setTimeout(() => {
+      const attackResult = computerPlayer.attack(player);
+      setGameboard([...player.getGameboard()]);
+      if (player.hasLost()) {
+        setWinner('Computer');
+        return;
+      }
+      if (attackResult) {
+        computerTurn();
+        return;
+      }
+      setWhoseTurn('Your turn');
+    }, 400);
+  };
+
+  const playerTurn = (row, col) => {
+    const attackResult = player.attack(computerPlayer, row, col);
+    setAttackboard(computerPlayer.getAttackboard());
+    if (computerPlayer.hasLost()) {
+      setWinner('You');
+      return;
+    }
+    if (attackResult) {
+      return;
+    }
+    setWhoseTurn('Computer turn');
+    computerTurn();
+  };
+
+  const handlePlay = () => {
+    setStarted(true);
   };
 
   const handleRandom = () => {
-    if (started) {
-      return;
+    if (!started) {
+      player.randomizeShips();
+      setShips(player.getShips());
     }
-    player.gameboard.randomizeShips();
-    setShips([...player.gameboard.getShips()]);
+  };
+
+  const handleCellClick = (row, col) => {
+    if (started && !winner && whoseTurn === 'Your turn') {
+      playerTurn(row, col);
+    }
+  };
+
+  const handleNewGame = () => {
+    init();
   };
 
   return (
@@ -54,17 +113,16 @@ export default function Game() {
       <GameState
         winner={winner}
         started={started}
+        onPlay={handlePlay}
         onRandom={handleRandom}
-        // onPlay={handlePlay}
-        // onNewGame={handleNewGame}
-
-        // whoseTurn={whoseTurn}
+        onNewGame={handleNewGame}
+        whoseTurn={whoseTurn}
       />
       <Board>
-        <GameBoard board={gameboard} ships={ships} />
+        <Gameboard board={gameboard} ships={ships} />
       </Board>
       <Board>
-        <FiringBoard board={firingboard} onCellClick={handleCellClick} />
+        <Attackboard board={attackboard} onCellClick={handleCellClick} />
       </Board>
     </StyledGame>
   );

@@ -9,6 +9,7 @@ const StyledButton = styled.button`
   border-radius: 5px;
   background-color: lightgreen;
   outline: none;
+  cursor: pointer;
 `;
 
 const StyledButtonsWrapper = styled.div`
@@ -26,8 +27,8 @@ const StyledMessage = styled.h3`
 export default function GameState({ onRandom, onPlay, onNewGame, started, winner, whoseTurn }) {
   return (
     <StyledButtonsWrapper>
-      {winner && <StyledButton onClick={onNewGame}>New Game</StyledButton>}
-      {!winner && <StyledButton onClick={onPlay}>Play</StyledButton>}
+      {started && <StyledButton onClick={onNewGame}>New Game</StyledButton>}
+      {!winner && !started && <StyledButton onClick={onPlay}>Play</StyledButton>}
       {!started && !winner && <StyledMessage>Place ships</StyledMessage>}
       {started && !winner && <StyledMessage>{whoseTurn}</StyledMessage>}
       {started && winner && <StyledMessage>{`${winner} won the game`}</StyledMessage>}

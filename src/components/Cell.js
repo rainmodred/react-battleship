@@ -38,21 +38,19 @@ const StyledMarkCell = styled(StyledCell)`
 
 export default function Cell({ type, onCellClick }) {
   const renderCell = type => {
-    if (onCellClick !== void 0) {
+    if (type === 'X') {
+      return <StyledHitCell>&#128500;</StyledHitCell>;
+    }
+
+    if (type === 'M') {
+      return <StyledMarkCell />;
+    }
+
+    if (onCellClick !== undefined) {
       return <StyledCell onClick={onCellClick} hover />;
     }
 
-    switch (type) {
-      case 'X': {
-        return <StyledHitCell>&#128500;</StyledHitCell>;
-      }
-      case 'M': {
-        return <StyledMarkCell />;
-      }
-      default: {
-        return <StyledCell />;
-      }
-    }
+    return <StyledCell />;
   };
 
   return <>{renderCell(type)}</>;

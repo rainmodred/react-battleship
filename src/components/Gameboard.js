@@ -11,7 +11,7 @@ const StyledBoard = styled.div`
   position: relative;
 `;
 
-export default function GameBoard({ board, ships }) {
+export default function Gameboard({ board, ships }) {
   const renderCells = () =>
     board.map((row, rowIndex) =>
       row.map((cell, colIndex) => <Cell type={cell} key={`g${rowIndex}${colIndex}`} />)
@@ -19,7 +19,7 @@ export default function GameBoard({ board, ships }) {
 
   const renderShips = () =>
     ships.map(ship => {
-      const { row, col } = ship.coords[0];
+      const { row, col } = ship.getStartCoords();
       return (
         <Ship
           row={row}
@@ -40,9 +40,8 @@ export default function GameBoard({ board, ships }) {
   );
 }
 
-GameBoard.propTypes = {
+Gameboard.propTypes = {
   board: PropTypes.arrayOf(PropTypes.array).isRequired,
-
   ships: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
