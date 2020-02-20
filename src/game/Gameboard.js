@@ -82,7 +82,7 @@ export default function Gameboard() {
     const { length } = ship;
     const { row, col } = ship.getStartCoords();
 
-    if (row < 0 || col < 0) {
+    if (row < 0 || col < 0 || col >= 10 || row >= 10) {
       return false;
     }
 
@@ -114,7 +114,14 @@ export default function Gameboard() {
     shipCoords.forEach(coords => {
       board[coords.row][coords.col] = '';
     });
-    ships = ships.filter(s => s.id !== ship.id);
+    ships = ships.filter(
+      s =>
+        !s.coords.find(
+          coords =>
+            ship.coords[0].row === coords.row &&
+            ship.coords[0].col === coords.col
+        )
+    );
     const newShip = Ship(row, col, ship.length, ship.orientation);
     if (canPlaceShip(newShip)) {
       return true;
@@ -128,7 +135,7 @@ export default function Gameboard() {
   };
   const placeShip = ship => {
     if (canPlaceShip(ship)) {
-      ship.getCoords().forEach(coords => {
+      ship.coords.forEach(coords => {
         board[coords.row][coords.col] = 'S';
       });
       ships.push(ship);
@@ -139,9 +146,9 @@ export default function Gameboard() {
   const placeShips = () => {
     const shipsToPlace = {
       s4: { quantity: 1, length: 4 },
-      s3: { quantity: 2, length: 3 },
-      s2: { quantity: 3, length: 2 },
-      s1: { quantity: 4, length: 1 },
+      // s3: { quantity: 2, length: 3 },
+      // s2: { quantity: 3, length: 2 },
+      // s1: { quantity: 4, length: 1 },
     };
 
     Object.entries(shipsToPlace).forEach(([name, ship]) => {
@@ -167,6 +174,7 @@ export default function Gameboard() {
       placeShip(movedShip);
       return movedShip;
     }
+    return undefined;
   };
 
   const randomizeShips = () => {
@@ -182,7 +190,7 @@ export default function Gameboard() {
     }
 
     const ship = ships.find(s =>
-      s.getCoords().find(coords => coords.row === row && coords.col === col)
+      s.coords.find(coords => coords.row === row && coords.col === col)
     );
     if (ship) {
       ship.hit();
