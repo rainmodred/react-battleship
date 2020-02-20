@@ -52,7 +52,24 @@ export default function Game() {
     setStarted(false);
     setWinner('');
   };
+
   useEffect(() => init(), []);
+
+  const canMoveShip = (ship, row, col) => {
+    if (!started) {
+      if (ship.row === row && ship.col === col) {
+        return false;
+      }
+
+      return player.canMoveShip(ship, row, col);
+    }
+  };
+
+  const moveShip = (ship, row, col) => {
+    const movedShip = player.moveShip(ship, row, col);
+    const { id } = ship;
+    setShips(ships.map(s => (s.id !== id ? s : { ...movedShip, id })));
+  };
 
   const computerTurn = () => {
     setTimeout(() => {
@@ -91,7 +108,12 @@ export default function Game() {
   const handleRandom = () => {
     if (!started) {
       player.randomizeShips();
-      setShips(player.getShips());
+      setShips(
+        player.getShips().map(ship => ({
+          ...ship,
+          id: uuidv4(),
+        }))
+      );
     }
   };
 
@@ -119,7 +141,12 @@ export default function Game() {
         whoseTurn={whoseTurn}
       />
       <Board>
-        <Gameboard board={gameboard} ships={ships} />
+        <Gameboard
+          board={gameboard}
+          ships={ships}
+          canMoveShip={canMoveShip}
+          moveShip={moveShip}
+        />
       </Board>
       <Board>
         <Attackboard board={attackboard} onCellClick={handleCellClick} />

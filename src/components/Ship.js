@@ -1,6 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
+import { useDrag } from 'react-dnd';
+import { ItemTypes } from '../constants/ItemTypes';
 
 const StyledShip = styled.div.attrs(({ row, col, length, orientation }) => ({
   style: {
@@ -18,7 +20,27 @@ const StyledShip = styled.div.attrs(({ row, col, length, orientation }) => ({
 `;
 
 export default function Ship(props) {
-  return <StyledShip {...props} orientation={props.orientation ? 1 : 0} />;
+  const { id, row, col, length, orientation, coords } = props;
+
+  const [{ isDragging }, drag] = useDrag({
+    item: {
+      id,
+      row,
+      col,
+      length,
+      orientation,
+      coords,
+      type: ItemTypes.SHIP,
+    },
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
+
+  if (isDragging) {
+    return <StyledShip ref={drag} {...props} style={{ opacity: 0.3 }} />;
+  }
+  return <StyledShip ref={drag} {...props} orientation={orientation} />;
 }
 
 Ship.propTypes = {

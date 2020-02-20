@@ -1,6 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { createGlobalStyle } from 'styled-components';
+import Backend from 'react-dnd-html5-backend';
+import { DndProvider } from 'react-dnd';
 import App from './App';
 
 const GlobalStyle = createGlobalStyle`
@@ -34,7 +36,9 @@ const GlobalStyle = createGlobalStyle`
 const app = (
   <>
     <GlobalStyle />
-    <App />
+    <DndProvider backend={Backend}>
+      <App />
+    </DndProvider>
   </>
 );
 

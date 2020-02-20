@@ -1,6 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDrop } from 'react-dnd';
 import PropTypes from 'prop-types';
+import { ItemTypes } from '../constants/ItemTypes';
 import Cell from './Cell';
 import Ship from './Ship';
 
@@ -11,17 +13,50 @@ const StyledBoard = styled.div`
   position: relative;
 `;
 
-export default function Gameboard({ board, ships }) {
+export default function Gameboard({ board, ships, canMoveShip, moveShip }) {
+  const [, drop] = useDrop({
+    accept: ItemTypes.SHIP,
+    drop: (item, monitor) => {
+      const delta = monitor.getDifferenceFromInitialOffset();
+      const y = 32 * item.row;
+      const x = 32 * item.col;
+
+      const row = Math.round((y + delta.y) / 32);
+      const col = Math.round((x + delta.x) / 32);
+
+      moveShip(item, row, col);
+      return undefined;
+    },
+    canDrop: (item, monitor) => {
+      const delta = monitor.getDifferenceFromInitialOffset();
+      const y = 32 * item.row;
+      const x = 32 * item.col;
+
+      const row = Math.round((y + delta.y) / 32);
+      const col = Math.round((x + delta.x) / 32);
+      console.log(item.id);
+      return canMoveShip(item, row, col);
+    },
+    collect: monitor => ({
+      isOver: monitor.isOver(),
+      canDrop: monitor.canDrop(),
+    }),
+  });
+
   const renderCells = () =>
     board.map((row, rowIndex) =>
-      row.map((cell, colIndex) => <Cell type={cell} key={`g${rowIndex}${colIndex}`} />)
+      row.map((cell, colIndex) => (
+        <Cell type={cell} key={`g${rowIndex}${colIndex}`} />
+      ))
     );
 
   const renderShips = () =>
     ships.map(ship => {
       const { row, col } = ship.getStartCoords();
+      const { coords } = ship;
       return (
         <Ship
+          coords={coords}
           row={row}
           col={col}
           id={ship.id}
@@ -33,7 +68,7 @@ export default function Gameboard({ board, ships }) {
     });
 
   return (
-    <StyledBoard>
+    <StyledBoard ref={drop}>
       {renderCells()}
       {renderShips()}
     </StyledBoard>
