@@ -14,14 +14,20 @@ function createBoard() {
 }
 
 export const validCoords = coords =>
-  !!(coords.row >= 0 && coords.col >= 0 && coords.row < BOARD_SIZE && coords.col < BOARD_SIZE);
+  !!(
+    coords.row >= 0 &&
+    coords.col >= 0 &&
+    coords.row < BOARD_SIZE &&
+    coords.col < BOARD_SIZE
+  );
 
 export default function Gameboard() {
   let board = createBoard();
   let ships = [];
 
   const getGameboard = () => board;
-  const getAttackboard = () => board.map(row => row.map(cell => (cell === 'S' ? '' : cell)));
+  const getAttackboard = () =>
+    board.map(row => row.map(cell => (cell === 'S' ? '' : cell)));
   const getShips = () => ships;
 
   const getNeighbors = (ship, withShip = true) => {
@@ -76,8 +82,19 @@ export default function Gameboard() {
     const { length } = ship;
     const { row, col } = ship.getStartCoords();
 
-    if (row + length > 10 || col + length > 10) {
+    if (row < 0 || col < 0) {
       return false;
+    }
+
+    if (ship.orientation) {
+      if (col + length > 10) {
+        return false;
+      }
+    }
+    if (!ship.orientation) {
+      if (row + length > 10) {
+        return false;
+      }
     }
 
     const neighbors = getNeighbors(ship);
@@ -92,8 +109,8 @@ export default function Gameboard() {
     return !hasShip;
   };
   const canMoveShip = (ship, row, col) => {
-    // delete ship and try place
-    const shipCoords = ship.getCoords();
+    // delete ship and try place at {row, col}
+    const shipCoords = ship.coords;
     shipCoords.forEach(coords => {
       board[coords.row][coords.col] = '';
     });
@@ -148,7 +165,7 @@ export default function Gameboard() {
     if (canMoveShip(ship, row, col)) {
       const movedShip = Ship(row, col, ship.length, ship.orientation);
       placeShip(movedShip);
-      return true;
+      return movedShip;
     }
   };
 
@@ -183,6 +200,7 @@ export default function Gameboard() {
     getGameboard,
     getAttackboard,
     placeShip,
+    canMoveShip,
     moveShip,
     placeShips,
     receiveAttack,
