@@ -1,30 +1,32 @@
 import Ship from './Ship';
 import getRandomInt from '../utils';
-
-const SIZE = 10;
+import { BOARD_SIZE } from '../constants/ItemTypes';
 
 function createBoard() {
   const arr = [];
-  for (let i = 0; i < SIZE; i++) {
+  for (let i = 0; i < BOARD_SIZE; i++) {
     arr.push([]);
-    for (let j = 0; j < SIZE; j++) {
+    for (let j = 0; j < BOARD_SIZE; j++) {
       arr[i].push('');
     }
   }
   return arr;
 }
 
+export const validCoords = coords =>
+  !!(coords.row >= 0 && coords.col >= 0 && coords.row < BOARD_SIZE && coords.col < BOARD_SIZE);
+
 export default function Gameboard() {
   let board = createBoard();
   let ships = [];
 
-  const getBoard = () => board;
+  const getGameboard = () => board;
+  const getAttackboard = () => board.map(row => row.map(cell => (cell === 'S' ? '' : cell)));
   const getShips = () => ships;
+
   const getNeighbors = (ship, withShip = true) => {
     const { length = 1, orientation } = ship;
-    const { row, col } = ship.coords[0];
-    const validCoords = coords =>
-      !!(coords.row >= 0 && coords.col >= 0 && coords.row < SIZE && coords.col < SIZE);
+    const { row, col } = ship.getStartCoords();
 
     const coordsArr = [];
 
@@ -72,7 +74,7 @@ export default function Gameboard() {
   };
   const canPlaceShip = ship => {
     const { length } = ship;
-    const { row, col } = ship.coords[0];
+    const { row, col } = ship.getStartCoords();
 
     if (row + length > 10 || col + length > 10) {
       return false;
@@ -91,8 +93,8 @@ export default function Gameboard() {
   };
   const canMoveShip = (ship, row, col) => {
     // delete ship and try place
-
-    ship.coords.forEach(coords => {
+    const shipCoords = ship.getCoords();
+    shipCoords.forEach(coords => {
       board[coords.row][coords.col] = '';
     });
     ships = ships.filter(s => s.id !== ship.id);
@@ -101,7 +103,7 @@ export default function Gameboard() {
       return true;
     }
 
-    ship.coords.forEach(coords => {
+    shipCoords.forEach(coords => {
       board[coords.row][coords.col] = 'S';
     });
     ships.push(ship);
@@ -109,7 +111,7 @@ export default function Gameboard() {
   };
   const placeShip = ship => {
     if (canPlaceShip(ship)) {
-      ship.coords.forEach(coords => {
+      ship.getCoords().forEach(coords => {
         board[coords.row][coords.col] = 'S';
       });
       ships.push(ship);
@@ -130,8 +132,8 @@ export default function Gameboard() {
 
       while (quantity > 0) {
         const newShip = Ship(
-          getRandomInt(0, SIZE),
-          getRandomInt(0, SIZE),
+          getRandomInt(0, BOARD_SIZE),
+          getRandomInt(0, BOARD_SIZE),
           length,
           Math.random() > 0.5
         );
@@ -162,7 +164,9 @@ export default function Gameboard() {
       return 'miss';
     }
 
-    const ship = ships.find(s => s.coords.find(coords => coords.row === row && coords.col === col));
+    const ship = ships.find(s =>
+      s.getCoords().find(coords => coords.row === row && coords.col === col)
+    );
     if (ship) {
       ship.hit();
       if (ship.isSunk()) {
@@ -176,7 +180,8 @@ export default function Gameboard() {
   };
   return {
     getShips,
-    getBoard,
+    getGameboard,
+    getAttackboard,
     placeShip,
     moveShip,
     placeShips,

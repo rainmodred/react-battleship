@@ -61,8 +61,8 @@ describe('Gameboard', () => {
   it(`can't moveShip if found another ship around`, () => {});
   it('create board with 10 ships', () => {
     gameboard.placeShips();
-    expect(gameboard.getBoard()).toHaveLength(10);
-    expect(gameboard.getBoard()[0]).toHaveLength(10);
+    expect(gameboard.getGameboard()).toHaveLength(10);
+    expect(gameboard.getGameboard()[0]).toHaveLength(10);
     expect(gameboard.getShips()).toHaveLength(10);
   });
   it('receiveAttack return miss', () => {

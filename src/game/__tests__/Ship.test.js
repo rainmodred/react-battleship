@@ -3,11 +3,11 @@ import Ship from '../Ship';
 describe('Ship', () => {
   let ship;
   beforeEach(() => {
-    ship = Ship(0, 0, 2);
+    ship = new Ship(0, 0, 2);
   });
 
   it('can create ship', () => {
-    expect(ship.coords[0]).toEqual({ row: 0, col: 0 });
+    expect(ship.getStartCoords()).toEqual({ row: 0, col: 0 });
     expect(ship.length).toBe(2);
     expect(ship.isSunk()).toBeFalsy();
   });

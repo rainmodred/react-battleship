@@ -2,25 +2,34 @@ import Gameboard from './Gameboard';
 
 export default function Player() {
   const gameboard = Gameboard();
-  let turn = true;
 
-  const getTurn = () => turn;
   const hasLost = () => {
-    const ships = gameboard.getShips();
-    return ships.every(ship => ship.isSunk());
+    return gameboard.getShips().every(ship => ship.isSunk());
   };
-  const getFiringboard = () =>
-    // return gameboard without ships
-    gameboard.getBoard().map(row => row.map(cell => (cell === 'S' ? '' : cell)));
   const attack = (enemy, row, col) => {
-    const attackResult = enemy.gameboard.receiveAttack(row, col);
-    turn = attackResult !== 'miss';
+    const attackResult = enemy.receiveAttack(row, col);
+    return attackResult !== 'miss';
   };
+
+  const {
+    receiveAttack,
+    placeShip,
+    placeShips,
+    getGameboard,
+    getAttackboard,
+    getShips,
+    randomizeShips,
+  } = gameboard;
+
   return {
-    getTurn,
-    getFiringboard,
-    gameboard,
-    hasLost,
+    receiveAttack,
+    placeShip,
+    placeShips,
+    getGameboard,
+    getAttackboard,
+    getShips,
     attack,
+    hasLost,
+    randomizeShips,
   };
 }
