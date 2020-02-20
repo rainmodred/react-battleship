@@ -13,28 +13,37 @@ const StyledBoard = styled.div`
   position: relative;
 `;
 
+function getDndCoords(delta, item) {
+  const y = 32 * item.row;
+  const x = 32 * item.col;
+
+  const row = parseInt(Math.round((y + delta.y) / 32), 10);
+  const col = parseInt(Math.round((x + delta.x) / 32), 10);
+  return { row, col };
+}
+
 export default function Gameboard({ board, ships, canMoveShip, moveShip }) {
   const [, drop] = useDrop({
     accept: ItemTypes.SHIP,
     drop: (item, monitor) => {
       const delta = monitor.getDifferenceFromInitialOffset();
-      const y = 32 * item.row;
-      const x = 32 * item.col;
+      // const y = 32 * item.row;
+      // const x = 32 * item.col;
 
-      const row = Math.round((y + delta.y) / 32);
-      const col = Math.round((x + delta.x) / 32);
-
+      // const row = parseInt(Math.round((y + delta.y) / 32), 10);
+      // const col = parseInt(Math.round((x + delta.x) / 32), 10);
+      const { row, col } = getDndCoords(delta, item);
       moveShip(item, row, col);
       return undefined;
     },
     canDrop: (item, monitor) => {
       const delta = monitor.getDifferenceFromInitialOffset();
-      const y = 32 * item.row;
-      const x = 32 * item.col;
+      // const y = 32 * item.row;
+      // const x = 32 * item.col;
 
-      const row = Math.round((y + delta.y) / 32);
-      const col = Math.round((x + delta.x) / 32);
-      console.log(item.id);
+      // const row = parseInt(Math.round((y + delta.y) / 32), 10);
+      // const col = parseInt(Math.round((x + delta.x) / 32), 10);
+      const { row, col } = getDndCoords(delta, item);
       return canMoveShip(item, row, col);
     },
     collect: monitor => ({

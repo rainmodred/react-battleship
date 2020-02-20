@@ -4,24 +4,24 @@ import styled from 'styled-components';
 import { useDrag } from 'react-dnd';
 import { ItemTypes } from '../constants/ItemTypes';
 
-const StyledShip = styled.div.attrs(({ row, col, length, orientation }) => ({
-  style: {
-    top: row * 32,
-    left: col * 32,
-    width: orientation ? 32 * length + 1 : '33px',
-    height: !orientation ? 32 * length + 1 : '33px',
-  },
-}))`
+const StyledShip = styled.div.attrs(
+  ({ row, col, length, orientation, isDragging }) => ({
+    style: {
+      top: row * 32,
+      left: col * 32,
+      width: orientation ? 32 * length + 1 : '33px',
+      height: !orientation ? 32 * length + 1 : '33px',
+      opacity: isDragging ? 0.3 : 0.7,
+    },
+  })
+)`
   position: absolute;
   border: 2px solid #00f;
   background-color: rgba(0, 0, 255, 0.05);
   cursor: move;
-  opacity: 0.7;
 `;
 
-export default function Ship(props) {
-  const { id, row, col, length, orientation, coords } = props;
-
+export default function Ship({ id, row, col, length, orientation, coords }) {
   const [{ isDragging }, drag] = useDrag({
     item: {
       id,
@@ -38,9 +38,27 @@ export default function Ship(props) {
   });
 
   if (isDragging) {
-    return <StyledShip ref={drag} {...props} style={{ opacity: 0.3 }} />;
+    return (
+      <StyledShip
+        ref={drag}
+        row={row}
+        col={col}
+        length={length}
+        orientation={orientation}
+        isDragging
+      />
+    );
   }
-  return <StyledShip ref={drag} {...props} orientation={orientation} />;
+  return (
+    <StyledShip
+      ref={drag}
+      row={row}
+      col={col}
+      length={length}
+      orientation={orientation}
+      isDragging={false}
+    />
+  );
 }
 
 Ship.propTypes = {

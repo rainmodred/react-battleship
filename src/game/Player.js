@@ -19,6 +19,8 @@ export default function Player() {
     getAttackboard,
     getShips,
     randomizeShips,
+    canMoveShip,
+    moveShip,
   } = gameboard;
 
   return {
@@ -31,5 +33,7 @@ export default function Player() {
     attack,
     hasLost,
     randomizeShips,
+    canMoveShip,
+    moveShip,
   };
 }

@@ -24,7 +24,6 @@ export default function Ship(row, col, length = 1, orientation = true) {
   const coords = createCoords(row, col, length, orientation);
   const hit = () => hits++;
   const isSunk = () => hits === length;
-  const getCoords = () => coords;
   const getStartCoords = () => coords[0];
 
   return {
@@ -34,7 +33,7 @@ export default function Ship(row, col, length = 1, orientation = true) {
     get orientation() {
       return orientation;
     },
-    getCoords,
+    coords,
     getStartCoords,
     hit,
     isSunk,

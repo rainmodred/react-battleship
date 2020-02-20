@@ -24,14 +24,25 @@ const StyledMessage = styled.h3`
   text-align: center;
 `;
 
-export default function GameState({ onRandom, onPlay, onNewGame, started, winner, whoseTurn }) {
+export default function GameState({
+  onRandom,
+  onPlay,
+  onNewGame,
+  started,
+  winner,
+  whoseTurn,
+}) {
   return (
     <StyledButtonsWrapper>
       {started && <StyledButton onClick={onNewGame}>New Game</StyledButton>}
-      {!winner && !started && <StyledButton onClick={onPlay}>Play</StyledButton>}
+      {!winner && !started && (
+        <StyledButton onClick={onPlay}>Play</StyledButton>
+      )}
       {!started && !winner && <StyledMessage>Place ships</StyledMessage>}
       {started && !winner && <StyledMessage>{whoseTurn}</StyledMessage>}
-      {started && winner && <StyledMessage>{`${winner} won the game`}</StyledMessage>}
+      {started && winner && (
+        <StyledMessage>{`${winner} won the game`}</StyledMessage>
+      )}
       <StyledButton onClick={onRandom} disabled={started}>
         Random
       </StyledButton>

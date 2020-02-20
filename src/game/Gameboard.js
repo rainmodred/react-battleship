@@ -146,9 +146,9 @@ export default function Gameboard() {
   const placeShips = () => {
     const shipsToPlace = {
       s4: { quantity: 1, length: 4 },
-      // s3: { quantity: 2, length: 3 },
-      // s2: { quantity: 3, length: 2 },
-      // s1: { quantity: 4, length: 1 },
+      s3: { quantity: 2, length: 3 },
+      s2: { quantity: 3, length: 2 },
+      s1: { quantity: 4, length: 1 },
     };
 
     Object.entries(shipsToPlace).forEach(([name, ship]) => {
