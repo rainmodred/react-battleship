@@ -18,13 +18,6 @@ export default function ComputerPlayer() {
       }
     }
 
-    const evenCoords = emptyCellCooords.filter(
-      coords => (coords.row + coords.col) % 2 === 1
-    );
-    if (evenCoords.length > 0) {
-      return evenCoords[getRandomInt(0, evenCoords.length)];
-    }
-
     return emptyCellCooords[getRandomInt(0, emptyCellCooords.length)];
   };
 
