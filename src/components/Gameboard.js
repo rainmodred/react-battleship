@@ -27,23 +27,15 @@ export default function Gameboard({ board, ships, canMoveShip, moveShip }) {
     accept: ItemTypes.SHIP,
     drop: (item, monitor) => {
       const delta = monitor.getDifferenceFromInitialOffset();
-      // const y = 32 * item.row;
-      // const x = 32 * item.col;
 
-      // const row = parseInt(Math.round((y + delta.y) / 32), 10);
-      // const col = parseInt(Math.round((x + delta.x) / 32), 10);
-      const { row, col } = getDndCoords(delta, item);
+      const { row, col } = getDndCoords(delta, item.coords[0]);
       moveShip(item, row, col);
       return undefined;
     },
     canDrop: (item, monitor) => {
       const delta = monitor.getDifferenceFromInitialOffset();
-      // const y = 32 * item.row;
-      // const x = 32 * item.col;
 
-      // const row = parseInt(Math.round((y + delta.y) / 32), 10);
-      // const col = parseInt(Math.round((x + delta.x) / 32), 10);
-      const { row, col } = getDndCoords(delta, item);
+      const { row, col } = getDndCoords(delta, item.coords[0]);
       return canMoveShip(item, row, col);
     },
     collect: monitor => ({
@@ -61,13 +53,10 @@ export default function Gameboard({ board, ships, canMoveShip, moveShip }) {
 
   const renderShips = () =>
     ships.map(ship => {
-      const { row, col } = ship.getStartCoords();
       const { coords } = ship;
       return (
         <Ship
           coords={coords}
-          row={row}
-          col={col}
           id={ship.id}
           key={ship.id}
           length={ship.length}
@@ -99,4 +88,6 @@ Gameboard.propTypes = {
       ),
     })
   ).isRequired,
+  canMoveShip: PropTypes.func.isRequired,
+  moveShip: PropTypes.func.isRequired,
 };

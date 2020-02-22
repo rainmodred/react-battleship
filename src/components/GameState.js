@@ -1,5 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 
 const StyledButton = styled.button`
   align-self: center;
@@ -49,3 +50,12 @@ export default function GameState({
     </StyledButtonsWrapper>
   );
 }
+
+GameState.propTypes = {
+  onRandom: PropTypes.func.isRequired,
+  onPlay: PropTypes.func.isRequired,
+  onNewGame: PropTypes.func.isRequired,
+  started: PropTypes.bool.isRequired,
+  winner: PropTypes.string.isRequired,
+  whoseTurn: PropTypes.string.isRequired,
+};

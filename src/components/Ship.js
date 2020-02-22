@@ -21,12 +21,10 @@ const StyledShip = styled.div.attrs(
   cursor: move;
 `;
 
-export default function Ship({ id, row, col, length, orientation, coords }) {
+export default function Ship({ id, length, orientation, coords }) {
   const [{ isDragging }, drag] = useDrag({
     item: {
       id,
-      row,
-      col,
       length,
       orientation,
       coords,
@@ -37,6 +35,8 @@ export default function Ship({ id, row, col, length, orientation, coords }) {
     }),
   });
 
+  const { row, col } = coords[0];
+
   if (isDragging) {
     return (
       <StyledShip
@@ -44,7 +44,7 @@ export default function Ship({ id, row, col, length, orientation, coords }) {
         row={row}
         col={col}
         length={length}
-        orientation={orientation}
+        orientation={orientation && true}
         isDragging
       />
     );
@@ -55,7 +55,7 @@ export default function Ship({ id, row, col, length, orientation, coords }) {
       row={row}
       col={col}
       length={length}
-      orientation={orientation}
+      orientation={orientation && true}
       isDragging={false}
     />
   );
@@ -63,8 +63,12 @@ export default function Ship({ id, row, col, length, orientation, coords }) {
 
 Ship.propTypes = {
   id: PropTypes.string.isRequired,
-  row: PropTypes.number.isRequired,
-  col: PropTypes.number.isRequired,
   length: PropTypes.number.isRequired,
   orientation: PropTypes.bool.isRequired,
+  coords: PropTypes.arrayOf(
+    PropTypes.shape({
+      row: PropTypes.number.isRequired,
+      col: PropTypes.number.isRequired,
+    })
+  ).isRequired,
 };
